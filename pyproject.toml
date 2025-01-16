@@ -1,0 +1,9 @@
+[project]
+name = "zombie-smash"
+version = "0.1.0"
+description = "Zombie smashing game"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pygame>=2.6.1",
+]
