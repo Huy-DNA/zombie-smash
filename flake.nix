@@ -14,6 +14,7 @@
           ruff
           python312
           python312Packages.pygame
+          neovim
         ];
         shellHook = ''
           uv sync
