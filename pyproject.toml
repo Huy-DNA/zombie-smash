@@ -10,3 +10,6 @@ dependencies = [
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
+include = [
+  "src/*"
+]
