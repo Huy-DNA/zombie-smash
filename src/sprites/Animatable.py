@@ -37,13 +37,17 @@ class Animatable:
     def draw(self, screen: pygame.Surface, current_ms: float, sprites: SpriteMap):
         if not self.__animation:
             return
-        sprite = self.__animation.get_sprite(self.get_current_frame(current_ms), sprites)
+        sprite = self.__animation.get_sprite(
+            self.get_current_frame(current_ms), sprites
+        )
         screen.blit(sprite, self.__pos)
 
     def get_rect(self, current_ms: float, sprites: SpriteMap) -> pygame.Rect:
         if not self.__animation:
             raise Exception("No currently set animation to retrieve Rect")
-        return self.__animation.get_sprite(self.get_current_frame(current_ms), sprites).get_rect()
+        return self.__animation.get_sprite(
+            self.get_current_frame(current_ms), sprites
+        ).get_rect()
 
     def get_current_frame(self, current_ms: float) -> int:
         delta_ms = current_ms - self.__start_ms

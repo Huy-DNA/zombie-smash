@@ -2,6 +2,7 @@ from constants import ZOMBIE_SPAWN_ANIMATION_IDXES
 from sprites.Animatable import Animatable
 from sprites.Animation import Animation
 
+
 class NormalZombie(Animatable):
     SPAWN_ANIMATION = Animation(ZOMBIE_SPAWN_ANIMATION_IDXES, False)
 

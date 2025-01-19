@@ -2,10 +2,11 @@ import pygame
 
 from sprites.SpriteMap import SpriteMap
 
-class Animation():
+
+class Animation:
     """Class for storing animation data"""
 
-    __sprite_idxes: list[int] # A list of indexes into the sprite map
+    __sprite_idxes: list[int]  # A list of indexes into the sprite map
     __should_loop: bool
 
     def __init__(self, sprite_idxes: list[int], should_loop: bool):

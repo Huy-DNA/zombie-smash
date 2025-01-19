@@ -26,16 +26,23 @@ while True:
     current_ms = pygame.time.get_ticks()
     hammer_rect = hammer.get_rect(current_ms, SPRITE_MAP)
 
-    # State update stage
+    ##################################
+    # State update stage #
+
     ## Hammer as the mouse
     mouse_pos_x, mouse_pos_y = pygame.mouse.get_pos()
-    hammer.set_pos(mouse_pos_x - hammer_rect.width / 2, mouse_pos_y - hammer_rect.height / 2)
+    hammer.set_pos(
+        mouse_pos_x - hammer_rect.width / 2, mouse_pos_y - hammer_rect.height / 2
+    )
 
+    ## Process pygame events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             break
 
-    # Render stage
+    ##################################
+    # Render stage #
+
     ## Grass lawn background
     screen.blit(SPRITE_MAP[GRASS_IDX], (0, 0))
 
@@ -50,7 +57,9 @@ while True:
     ## Mouse icon
     hammer.draw(screen, current_ms, SPRITE_MAP)
 
-    # Commit
+    ##################################
+    # Commit changes #
+
     pygame.display.flip()
 
     clock.tick(60)

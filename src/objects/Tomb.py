@@ -13,7 +13,7 @@ class Tomb:
         self.__tomb_stone = Static(TOMB_IDX, x=x, y=y)
         self.__tomb_dirt_rocks = [
             Static(TOMB_ROCKS_IDX, x=x - 30, y=y + 170),
-            Static(TOMB_ROCKS_IDX, x=x + 40, y=y + 160)
+            Static(TOMB_ROCKS_IDX, x=x + 40, y=y + 160),
         ]
 
     def draw_tomb_stone(self, screen: pygame.Surface, sprites: SpriteMap):
