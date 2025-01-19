@@ -35,6 +35,9 @@ while True:
         mouse_pos_x - hammer_rect.width / 2, mouse_pos_y - hammer_rect.height / 2
     )
 
+    if pygame.mouse.get_pressed()[0]:
+        hammer.smash(current_ms)
+
     ## Process pygame events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
