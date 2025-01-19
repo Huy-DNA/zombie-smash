@@ -19,7 +19,7 @@ class Animation():
         size = self.get_size()
         if self.__should_loop:
             return sprites[self.__sprite_idxes[idx % size]]
-        return sprites[self.__sprite_idxes[idx]]
+        return sprites[self.__sprite_idxes[min(idx, len(self.__sprite_idxes) - 1)]]
 
     def is_end(self, idx: int) -> bool:
         if self.__should_loop:

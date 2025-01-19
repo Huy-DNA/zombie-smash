@@ -39,6 +39,6 @@ class Animatable():
         if not self.__animation:
             return
         delta_ms = current_ms - self.__start_ms
-        frame_idx = min(int(delta_ms * self.__fps / 1000), self.__animation.get_size() - 1)
+        frame_idx = int(delta_ms * self.__fps / 1000)
         sprite = self.__animation.get_sprite(frame_idx, sprites)
         screen.blit(sprite, self.__pos)
