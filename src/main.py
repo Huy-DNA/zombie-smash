@@ -2,11 +2,13 @@ import pygame
 
 from objects.Tomb import Tomb
 from objects.zombies.NormalZombie import NormalZombie
-from constants import GRASS_IDX, SCREEN_SIZE, SPRITE_MAP
+from constants import GRASS_IDX, ICON_PATH, SCREEN_SIZE, SPRITE_MAP
 
 pygame.init()
+
+pygame.display.set_caption("Zombie smash")
+pygame.display.set_icon(pygame.image.load(ICON_PATH))
 screen = pygame.display.set_mode(SCREEN_SIZE)
-clock = pygame.time.Clock()
 
 tombs = [
     Tomb(x=100, y=100),
@@ -16,6 +18,7 @@ tombs = [
     Tomb(x=700, y=400),
 ]
 
+clock = pygame.time.Clock()
 while True:
     # State update stage
     for event in pygame.event.get():

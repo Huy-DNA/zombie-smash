@@ -8,6 +8,8 @@ SCREEN_SIZE = (SCREEN_WIDTH, SCREEN_HEIGHT)
 
 ASSETS_DIR = f"{os.getcwd()}/assets"
 
+ICON_PATH = f"{ASSETS_DIR}/icon.png"
+
 SPRITE_PATHS = [
     f"{ASSETS_DIR}/normal-zombie/spawn/{img}.png" for img in range(1, 25)
 ] + [
