@@ -4,7 +4,8 @@ import pygame
 from sprites.Animation import Animation
 from sprites.SpriteMap import SpriteMap
 
-class Animatable():
+
+class Animatable:
     """Class for representing an animatable entity such as a zombie"""
 
     __fps: float
@@ -31,14 +32,15 @@ class Animatable():
     def is_animation_end(self, current_ms: float) -> bool:
         if not self.__animation:
             return True
-        delta_ms = current_ms - self.__start_ms
-        frame_idx = int(delta_ms * self.__fps / 1000)
-        return self.__animation.is_end(frame_idx)
+        return self.__animation.is_end(self.get_current_frame(current_ms))
 
     def draw(self, screen: pygame.Surface, current_ms: float, sprites: SpriteMap):
         if not self.__animation:
             return
+        sprite = self.__animation.get_sprite(self.get_current_frame(current_ms), sprites)
+        screen.blit(sprite, self.__pos)
+
+    def get_current_frame(self, current_ms: float) -> int:
         delta_ms = current_ms - self.__start_ms
         frame_idx = int(delta_ms * self.__fps / 1000)
-        sprite = self.__animation.get_sprite(frame_idx, sprites)
-        screen.blit(sprite, self.__pos)
+        return frame_idx
