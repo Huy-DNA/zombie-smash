@@ -2,7 +2,7 @@ import pygame
 
 from objects.Hammer import Hammer
 from objects.Tomb import Tomb
-from objects.zombies.NormalZombie import NormalZombie
+from objects.zombies.NormalZombie import NormalZombie, ZombieAnimation
 from constants import GRASS_IDX, ICON_PATH, SCREEN_SIZE, SPRITE_MAP
 
 pygame.init()
@@ -29,12 +29,6 @@ while True:
     ##################################
     # State update stage #
 
-    ## Hammer as the mouse
-    mouse_pos_x, mouse_pos_y = pygame.mouse.get_pos()
-    hammer.set_pos(
-        mouse_pos_x - hammer_rect.width / 2, mouse_pos_y - hammer_rect.height / 2
-    )
-
     if pygame.mouse.get_pressed()[0]:
         hammer.smash(current_ms)
 
@@ -42,6 +36,16 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             break
+
+    ##################################
+    # Position update stage #
+    ## Zombie
+
+    ## Hammer as the mouse
+    mouse_pos_x, mouse_pos_y = pygame.mouse.get_pos()
+    hammer.set_pos(
+        mouse_pos_x - hammer_rect.width / 2, mouse_pos_y - hammer_rect.height / 2
+    )
 
     ##################################
     # Render stage #

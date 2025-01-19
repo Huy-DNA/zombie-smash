@@ -29,6 +29,9 @@ class Animatable:
     def set_pos(self, x: float, y: float):
         self.__pos = (x, y)
 
+    def get_pos(self) -> tuple[float, float]:
+        return self.__pos
+
     def is_animation_end(self, current_ms: float) -> bool:
         if not self.__animation:
             return True
