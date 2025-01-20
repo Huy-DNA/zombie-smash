@@ -36,7 +36,8 @@ while True:
     if pygame.mouse.get_pressed()[0]:
         hammer.smash()
         for spot in spawning_spots:
-            if spot.has_zombie() and spot.get_active_zombie().get_rect(SPRITE_MAP).collidepoint(mouse_pos_x, mouse_pos_y):
+            active_zombie = spot.get_active_zombie()
+            if active_zombie is not None and active_zombie.get_rect(SPRITE_MAP).collidepoint(mouse_pos_x, mouse_pos_y):
                 spot.kill_zombie()
 
     ## Process pygame events
