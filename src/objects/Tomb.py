@@ -21,9 +21,8 @@ class Tomb:
     def get_pos(self) -> tuple[float, float]:
         return self.__pos
 
-    def draw_tomb_stone(self, screen: pygame.Surface, sprites: SpriteMap):
+    def draw(self, screen: pygame.Surface, sprites: SpriteMap):
         self.__tomb_stone.draw(screen, sprites)
-
-    def draw_tomb_dirt_rocks(self, screen: pygame.Surface, sprites: SpriteMap):
-        self.__tomb_dirt_rocks[0].draw(screen, sprites)
-        self.__tomb_dirt_rocks[1].draw(screen, sprites)
+        for sprite in self.__tomb_dirt_rocks:
+            sprite.draw(screen, sprites)
+            sprite.draw(screen, sprites)

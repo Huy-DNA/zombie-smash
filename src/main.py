@@ -79,16 +79,13 @@ while True:
 
     ## Tombstone
     for tomb in tombs:
-        tomb.draw_tomb_stone(screen, SPRITE_MAP)
+        tomb.draw(screen, SPRITE_MAP)
 
+    ## Zombie
     for zombie in zombies:
         if not zombie[1]:
             continue
         zombie[0].draw(screen, SPRITE_MAP)
-
-    ## Tomb dirt rock decoration
-    for tomb in tombs:
-        tomb.draw_tomb_dirt_rocks(screen, SPRITE_MAP)
 
     ## Mouse icon
     hammer.draw(screen, SPRITE_MAP)
