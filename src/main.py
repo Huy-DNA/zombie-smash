@@ -21,7 +21,6 @@ tombs = [
 ]
 hammer = Hammer()
 zombie = NormalZombie()
-zombie.set_fps(60)
 zombie.spawn(pygame.time.get_ticks())
 
 clock = pygame.time.Clock()
