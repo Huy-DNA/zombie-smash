@@ -17,6 +17,7 @@ SPRITE_PATHS = (
     + [f"{ASSETS_DIR}/background/grass.jpg"]
     + [f"{ASSETS_DIR}/hammer/base.png"]
     + [f"{ASSETS_DIR}/hammer/{img}.png" for img in range(1, 9)]
+    + [f"{ASSETS_DIR}/normal-zombie/die/{img}.png" for img in range(1, 41)]
 )
 SPRITE_MAP = loadSpriteMap(SPRITE_PATHS)
 
@@ -26,3 +27,4 @@ TOMB_ROCKS_IDX = 33
 GRASS_IDX = 34
 HAMMER_IDX = 35
 HAMMER_SMASH_ANIMATION_IDXES = list(range(36, 44)) + list(range(43, 34, -1))
+ZOMBIE_DIE_ANIMATION_IDXES = list(range(44, 84))
