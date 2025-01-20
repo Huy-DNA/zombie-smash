@@ -25,7 +25,10 @@ spawning_spots = [
 ]
 pygame.time.set_timer(events.SPAWN_EVENT, 3000, loops=0)
 
+hits = 0
+misses = 0
 clock = pygame.time.Clock()
+last_mouse_state = pygame.mouse.get_pressed()
 while True:
     current_ms = pygame.time.get_ticks()
     mouse_pos_x, mouse_pos_y = pygame.mouse.get_pos()
@@ -33,12 +36,18 @@ while True:
     ##################################
     # State update stage #
 
-    if pygame.mouse.get_pressed()[0]:
+    current_mouse_state = pygame.mouse.get_pressed()
+    if not last_mouse_state[0] and current_mouse_state[0]:
         hammer.smash()
         for spot in spawning_spots:
             active_zombie = spot.get_active_zombie()
             if active_zombie is not None and active_zombie.get_rect(SPRITE_MAP).collidepoint(mouse_pos_x, mouse_pos_y):
                 spot.kill_zombie()
+                hits += 1
+                break
+        else:
+            misses += 1
+    last_mouse_state = current_mouse_state
 
     ## Process pygame events
     for event in pygame.event.get():
