@@ -37,13 +37,20 @@ pygame.time.set_timer(events.SPAWN_EVENT, 3000, loops = 0)
 clock = pygame.time.Clock()
 while True:
     current_ms = pygame.time.get_ticks()
-    hammer_rect = hammer.get_rect(current_ms, SPRITE_MAP)
+    mouse_pos_x, mouse_pos_y = pygame.mouse.get_pos()
 
     ##################################
     # State update stage #
 
     if pygame.mouse.get_pressed()[0]:
         hammer.smash(current_ms)
+        for zombie in zombies:
+            obj, spawned = zombie
+            if not spawned: continue
+            obj_rect = obj.get_rect(current_ms, SPRITE_MAP)
+            obj_rect.topleft = obj.get_pos()
+            if obj_rect.collidepoint(mouse_pos_x, mouse_pos_y):
+                zombie[1] = False
 
     ## Process pygame events
     for event in pygame.event.get():
@@ -71,7 +78,7 @@ while True:
         )
 
     ## Hammer as the mouse
-    mouse_pos_x, mouse_pos_y = pygame.mouse.get_pos()
+    hammer_rect = hammer.get_rect(current_ms, SPRITE_MAP)
     hammer.set_pos(
         mouse_pos_x - hammer_rect.width / 2, mouse_pos_y - hammer_rect.height / 2
     )
