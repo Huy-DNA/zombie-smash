@@ -5,7 +5,7 @@ import datetime
 import events
 from objects.Hammer import Hammer
 from objects.Tomb import Tomb
-from objects.zombies.NormalZombie import NormalZombie, ZombieAnimation
+from objects.zombies.NormalZombie import NormalZombie
 from constants import GRASS_IDX, ICON_PATH, SCREEN_SIZE, SPRITE_MAP
 
 pygame.init()
@@ -26,13 +26,13 @@ tombs = [
 ]
 zombies = [
     # [Zombie instance, is spawned]
-    [NormalZombie(), False],
-    [NormalZombie(), False],
-    [NormalZombie(), False],
-    [NormalZombie(), False],
-    [NormalZombie(), False],
+    [NormalZombie(base_pos=(200, 300)), False],
+    [NormalZombie(base_pos=(600, 300)), False],
+    [NormalZombie(base_pos=(1000, 300)), False],
+    [NormalZombie(base_pos=(400, 600)), False],
+    [NormalZombie(base_pos=(800, 600)), False],
 ]
-pygame.time.set_timer(events.SPAWN_EVENT, 3000, loops = 0)
+pygame.time.set_timer(events.SPAWN_EVENT, 3000, loops=0)
 
 clock = pygame.time.Clock()
 while True:
@@ -43,12 +43,12 @@ while True:
     # State update stage #
 
     if pygame.mouse.get_pressed()[0]:
-        hammer.smash(current_ms)
+        hammer.smash()
         for zombie in zombies:
             obj, spawned = zombie
-            if not spawned: continue
-            obj_rect = obj.get_rect(current_ms, SPRITE_MAP)
-            obj_rect.topleft = obj.get_pos()
+            if not spawned:
+                continue
+            obj_rect = obj.get_rect(SPRITE_MAP)
             if obj_rect.collidepoint(mouse_pos_x, mouse_pos_y):
                 zombie[1] = False
 
@@ -59,29 +59,17 @@ while True:
         elif event.type == events.SPAWN_EVENT:
             for zombie in zombies:
                 obj, spawned = zombie
-                if spawned: continue
+                if spawned:
+                    continue
                 should_spawn = random.random() < 0.3
                 zombie[1] = should_spawn
                 if should_spawn:
-                    obj.spawn(current_ms)
+                    obj.spawn()
 
     ##################################
     # Position update stage #
-    ## Zombie
-    for i, zombie in enumerate(zombies):
-        if not zombie[1]:
-            continue
-        tomb_pos = tombs[i].get_pos()
-        zombie_rect = zombie[0].get_rect(current_ms, SPRITE_MAP)
-        zombie[0].set_pos(
-            tomb_pos[0] + 100 - zombie_rect.width / 2, tomb_pos[1] + 190 - zombie_rect.height
-        )
-
     ## Hammer as the mouse
-    hammer_rect = hammer.get_rect(current_ms, SPRITE_MAP)
-    hammer.set_pos(
-        mouse_pos_x - hammer_rect.width / 2, mouse_pos_y - hammer_rect.height / 2
-    )
+    hammer.set_base_pos(mouse_pos_x, mouse_pos_y)
 
     ##################################
     # Render stage #
@@ -96,14 +84,14 @@ while True:
     for zombie in zombies:
         if not zombie[1]:
             continue
-        zombie[0].draw(screen, current_ms, SPRITE_MAP)
+        zombie[0].draw(screen, SPRITE_MAP)
 
     ## Tomb dirt rock decoration
     for tomb in tombs:
         tomb.draw_tomb_dirt_rocks(screen, SPRITE_MAP)
 
     ## Mouse icon
-    hammer.draw(screen, current_ms, SPRITE_MAP)
+    hammer.draw(screen, SPRITE_MAP)
 
     ##################################
     # Commit changes #

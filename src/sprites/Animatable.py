@@ -1,58 +1,77 @@
 from typing import Optional
 import pygame
 
-from sprites.Animation import Animation
+from sprites.Animation import Direction
+from sprites.AnimationSet import AnimationSet
 from sprites.SpriteMap import SpriteMap
 
 
 class Animatable:
     """Class for representing an animatable entity such as a zombie"""
 
-    __fps: float
+    __animation_set: Optional[AnimationSet]
+    __base_pos: tuple[float, float]
     __start_ms: float
-    __animation: Optional[Animation]
-    __pos: tuple[float, float]
 
-    def __init__(self):
-        self.__fps = 0
-        self.__start_ms = 0
-        self.__animation = None
-        self.__pos = (0, 0)
+    def __init__(self, *, base_pos: tuple[float, float] = (0, 0), start_ms: float = 0):
+        self.__base_pos = base_pos
+        self.__animation_set = None
+        self.__start_ms = start_ms or pygame.time.get_ticks()
 
-    def set_animation(self, animation: Animation, start_ms: float):
-        self.__animation = animation
-        self.__start_ms = start_ms
+    def set_animation_set(self, animation_set: AnimationSet, *, start_ms: float = 0):
+        self.__animation_set = animation_set
+        self.__start_ms = start_ms or pygame.time.get_ticks()
 
-    def set_fps(self, fps: float):
-        self.__fps = fps
+    def set_base_pos(self, x: float, y: float):
+        self.__base_pos = (x, y)
 
-    def set_pos(self, x: float, y: float):
-        self.__pos = (x, y)
+    def get_base_pos(self) -> tuple[float, float]:
+        return self.__base_pos
 
-    def get_pos(self) -> tuple[float, float]:
-        return self.__pos
-
-    def is_animation_end(self, current_ms: float) -> bool:
-        if not self.__animation:
-            return True
-        return self.__animation.is_end(self.get_current_frame(current_ms))
-
-    def draw(self, screen: pygame.Surface, current_ms: float, sprites: SpriteMap):
-        if not self.__animation:
+    def draw(self, screen: pygame.Surface, sprites: SpriteMap):
+        if not self.__animation_set:
             return
-        sprite = self.__animation.get_sprite(
-            self.get_current_frame(current_ms), sprites
+        sprite, direction = self.__animation_set.get_sprite(
+            self.get_current_frame(), sprites
         )
-        screen.blit(sprite, self.__pos)
+        sprite_rect = sprite.get_rect()
+        screen.blit(sprite, self.__get_topleft_pos(direction, sprite_rect.width, sprite_rect.height))
 
-    def get_rect(self, current_ms: float, sprites: SpriteMap) -> pygame.Rect:
-        if not self.__animation:
-            raise Exception("No currently set animation to retrieve Rect")
-        return self.__animation.get_sprite(
-            self.get_current_frame(current_ms), sprites
-        ).get_rect()
+    def get_rect(self, sprites: SpriteMap) -> pygame.Rect:
+        if not self.__animation_set:
+            raise Exception("No current rect")
+        sprite, direction = self.__animation_set.get_sprite(
+            self.get_current_frame(), sprites
+        )
+        rect = sprite.get_rect()
+        rect.topleft = self.__get_topleft_pos(direction, rect.width, rect.height)
+        return rect
 
-    def get_current_frame(self, current_ms: float) -> int:
-        delta_ms = current_ms - self.__start_ms
-        frame_idx = int(delta_ms * self.__fps / 1000)
+    def get_current_frame(self) -> int:
+        if not self.__animation_set:
+            raise Exception("No current frame")
+        delta_ms = pygame.time.get_ticks() - self.__start_ms
+        frame_idx = int(delta_ms * self.__animation_set.fps / 1000)
         return frame_idx
+
+    def __get_topleft_pos(self, direction: Direction, width: float, height: float) -> tuple[int, int]:
+        match direction:
+            case Direction.TOP_LEFT:
+                pos = self.__base_pos
+            case Direction.TOP_CENTER:
+                pos = (self.__base_pos[0] - width / 2, self.__base_pos[1])
+            case Direction.TOP_RIGHT:
+                pos = (self.__base_pos[0] - width, self.__base_pos[1])
+            case Direction.CENTER_LEFT:
+                pos = (self.__base_pos[0], self.__base_pos[1] - height / 2)
+            case Direction.CENTER_CENTER:
+                pos = (self.__base_pos[0] - width / 2, self.__base_pos[1] - height / 2)
+            case Direction.CENTER_RIGHT:
+                pos = (self.__base_pos[0] - width, self.__base_pos[1] - height / 2)
+            case Direction.BOTTOM_LEFT:
+                pos = (self.__base_pos[0], self.__base_pos[1] - height)
+            case Direction.BOTTOM_CENTER:
+                pos = (self.__base_pos[0] - width / 2, self.__base_pos[1] - height)
+            case Direction.BOTTOM_RIGHT:
+                pos = (self.__base_pos[0] - width, self.__base_pos[1] - height)
+        return (int(pos[0]), int(pos[1]))

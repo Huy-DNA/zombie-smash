@@ -1,26 +1,21 @@
-from enum import Enum
-from typing import Optional
 from constants import ZOMBIE_SPAWN_ANIMATION_IDXES
 from sprites.Animatable import Animatable
-from sprites.Animation import Animation
+from sprites.Animation import Animation, Direction
+from sprites.AnimationSet import AnimationSet
 
 
-class ZombieAnimation(Enum):
-    Spawning = 0
+SPAWN_ANIMATION = Animation(
+    sprite_idxes=ZOMBIE_SPAWN_ANIMATION_IDXES,
+    should_loop=False,
+    direction=Direction.BOTTOM_CENTER,
+)
+
 
 class NormalZombie(Animatable):
-    SPAWN_ANIMATION = Animation(ZOMBIE_SPAWN_ANIMATION_IDXES, False)
+    SPAWN_ANIMATION_SET = AnimationSet(queue=[SPAWN_ANIMATION], fps=60)
 
-    __active_animation: Optional[ZombieAnimation]
+    def __init__(self, *, base_pos: tuple[float, float] = (0, 0)):
+        self.set_base_pos(base_pos[0], base_pos[1])
 
-    def __init__(self, *, fps: float = 60, x: float = 0, y: float = 0):
-        self.set_fps(fps)
-        self.set_pos(x, y)
-        self.__active_animation = None
-
-    def spawn(self, start_ms: float):
-        self.set_animation(NormalZombie.SPAWN_ANIMATION, start_ms)
-        self.__active_animation = ZombieAnimation.Spawning
-
-    def get_active_animation(self) -> Optional[ZombieAnimation]:
-        return self.__active_animation
+    def spawn(self, *, start_ms: float = 0):
+        self.set_animation_set(NormalZombie.SPAWN_ANIMATION_SET, start_ms=start_ms)
