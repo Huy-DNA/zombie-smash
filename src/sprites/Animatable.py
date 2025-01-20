@@ -46,6 +46,11 @@ class Animatable:
         rect = sprite.get_rect()
         rect.topleft = self.__get_topleft_pos(direction, rect.width, rect.height)
         return rect
+    
+    def can_animation_end(self) -> bool:
+        if self.__animation_set is None:
+            return True
+        return self.get_current_frame() >= self.__animation_set.get_size()
 
     def get_current_frame(self) -> int:
         if not self.__animation_set:

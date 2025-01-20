@@ -36,7 +36,7 @@ while True:
     if pygame.mouse.get_pressed()[0]:
         hammer.smash()
         for spot in spawning_spots:
-            if spot.has_zombie() and spot.get_zombie().get_rect(SPRITE_MAP).collidepoint(mouse_pos_x, mouse_pos_y):
+            if spot.has_zombie() and spot.get_active_zombie().get_rect(SPRITE_MAP).collidepoint(mouse_pos_x, mouse_pos_y):
                 spot.kill_zombie()
 
     ## Process pygame events
@@ -47,6 +47,11 @@ while True:
             for spot in spawning_spots:
                 if not spot.has_zombie() and random.random() < 0.3:
                     spot.spawn_zombie()
+
+    ## Try despawning zombies
+    for spot in spawning_spots:
+        if spot.get_spawned_time() > 3000:
+            spot.despawn_zombie()
 
     ##################################
     # Position update stage #
