@@ -8,18 +8,18 @@ from sprites.Static import Static
 class Tomb:
     __tomb_stone: Static
     __tomb_dirt_rocks: list[Static]
-    __pos: tuple[float, float]
+    __base_pos: tuple[float, float]
 
-    def __init__(self, *, x: float, y: float):
-        self.__pos = (x, y)
-        self.__tomb_stone = Static(TOMB_IDX, x=x, y=y)
+    def __init__(self, *, base_pos: tuple[float, float]):
+        self.__base_pos = base_pos
+        self.__tomb_stone = Static(TOMB_IDX, base_pos=base_pos)
         self.__tomb_dirt_rocks = [
-            Static(TOMB_ROCKS_IDX, x=x - 30, y=y + 170),
-            Static(TOMB_ROCKS_IDX, x=x + 40, y=y + 160),
+            Static(TOMB_ROCKS_IDX, base_pos=(base_pos[0] - 30, base_pos[1] + 170)),
+            Static(TOMB_ROCKS_IDX, base_pos=(base_pos[0] + 40, base_pos[1] + 160)),
         ]
 
-    def get_pos(self) -> tuple[float, float]:
-        return self.__pos
+    def get_base_pos(self) -> tuple[float, float]:
+        return self.__base_pos
 
     def draw(self, screen: pygame.Surface, sprites: SpriteMap):
         self.__tomb_stone.draw(screen, sprites)
