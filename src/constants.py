@@ -16,7 +16,7 @@ SPRITE_PATHS = (
     + [f"{ASSETS_DIR}/background/tomb_rocks.png"]
     + [f"{ASSETS_DIR}/background/grass.jpg"]
     + [f"{ASSETS_DIR}/hammer/base.png"]
-    + [f"{ASSETS_DIR}/hammer/{img}.png" for img in range(1, 12)]
+    + [f"{ASSETS_DIR}/hammer/{img}.png" for img in range(1, 9)]
 )
 SPRITE_MAP = loadSpriteMap(SPRITE_PATHS)
 
@@ -25,4 +25,4 @@ TOMB_IDX = 32
 TOMB_ROCKS_IDX = 33
 GRASS_IDX = 34
 HAMMER_IDX = 35
-HAMMER_SMASH_ANIMATION_IDXES = list(range(36, 47)) + list(range(46, 34, -1))
+HAMMER_SMASH_ANIMATION_IDXES = list(range(36, 44)) + list(range(43, 34, -1))
