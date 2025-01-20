@@ -20,6 +20,9 @@ tombs = [
     Tomb(x=700, y=400),
 ]
 hammer = Hammer()
+zombie = NormalZombie()
+zombie.set_fps(60)
+zombie.spawn(pygame.time.get_ticks())
 
 clock = pygame.time.Clock()
 while True:
@@ -56,6 +59,10 @@ while True:
     ## Tombstone
     for tomb in tombs:
         tomb.draw_tomb_stone(screen, SPRITE_MAP)
+
+    zombie_rect = zombie.get_rect(current_ms, SPRITE_MAP)
+    zombie.set_pos(170, 280 - zombie_rect.height)
+    zombie.draw(screen, current_ms, SPRITE_MAP)
 
     ## Tomb dirt rock decoration
     for tomb in tombs:

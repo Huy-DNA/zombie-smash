@@ -11,7 +11,7 @@ ASSETS_DIR = f"{os.getcwd()}/assets"
 ICON_PATH = f"{ASSETS_DIR}/icon.png"
 
 SPRITE_PATHS = (
-    [f"{ASSETS_DIR}/normal-zombie/spawn/{img}.png" for img in range(1, 25)]
+    [f"{ASSETS_DIR}/normal-zombie/spawn/{img}.png" for img in range(1, 26)]
     + [f"{ASSETS_DIR}/background/tomb.png"]
     + [f"{ASSETS_DIR}/background/tomb_rocks.png"]
     + [f"{ASSETS_DIR}/background/grass.jpg"]
@@ -20,9 +20,9 @@ SPRITE_PATHS = (
 )
 SPRITE_MAP = loadSpriteMap(SPRITE_PATHS)
 
-ZOMBIE_SPAWN_ANIMATION_IDXES = list(range(24))
-TOMB_IDX = 24
-TOMB_ROCKS_IDX = 25
-GRASS_IDX = 26
-HAMMER_IDX = 27
-HAMMER_SMASH_ANIMATION_IDXES = list(range(27, 48)) + list(range(47, 26, -1))
+ZOMBIE_SPAWN_ANIMATION_IDXES = list(range(25))
+TOMB_IDX = 25
+TOMB_ROCKS_IDX = 26
+GRASS_IDX = 27
+HAMMER_IDX = 28
+HAMMER_SMASH_ANIMATION_IDXES = list(range(29, 49)) + list(range(48, 27, -1))
