@@ -13,8 +13,9 @@ class NormalZombie(Animatable):
 
     __active_animation: Optional[ZombieAnimation]
 
-    def __init__(self, *, fps: float = 60):
+    def __init__(self, *, fps: float = 60, x: float = 0, y: float = 0):
         self.set_fps(fps)
+        self.set_pos(x, y)
         self.__active_animation = None
 
     def spawn(self, start_ms: float):

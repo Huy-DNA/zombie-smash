@@ -1,17 +1,22 @@
 import pygame
+import random
+import datetime
 
+import events
 from objects.Hammer import Hammer
 from objects.Tomb import Tomb
 from objects.zombies.NormalZombie import NormalZombie, ZombieAnimation
 from constants import GRASS_IDX, ICON_PATH, SCREEN_SIZE, SPRITE_MAP
 
 pygame.init()
+random.seed(datetime.datetime.now().ctime())
 
 pygame.display.set_caption("Zombie smash")
 pygame.display.set_icon(pygame.image.load(ICON_PATH))
 pygame.mouse.set_visible(False)
 screen = pygame.display.set_mode(SCREEN_SIZE)
 
+hammer = Hammer()
 tombs = [
     Tomb(x=100, y=100),
     Tomb(x=500, y=100),
@@ -19,9 +24,15 @@ tombs = [
     Tomb(x=300, y=400),
     Tomb(x=700, y=400),
 ]
-hammer = Hammer()
-zombie = NormalZombie()
-zombie.spawn(pygame.time.get_ticks())
+zombies = [
+    # [Zombie instance, is spawned]
+    [NormalZombie(), False],
+    [NormalZombie(), False],
+    [NormalZombie(), False],
+    [NormalZombie(), False],
+    [NormalZombie(), False],
+]
+pygame.time.set_timer(events.SPAWN_EVENT, 3000, loops = 0)
 
 clock = pygame.time.Clock()
 while True:
@@ -38,10 +49,26 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             break
+        elif event.type == events.SPAWN_EVENT:
+            for zombie in zombies:
+                obj, spawned = zombie
+                if spawned: continue
+                should_spawn = random.random() < 0.3
+                zombie[1] = should_spawn
+                if should_spawn:
+                    obj.spawn(current_ms)
 
     ##################################
     # Position update stage #
     ## Zombie
+    for i, zombie in enumerate(zombies):
+        if not zombie[1]:
+            continue
+        tomb_pos = tombs[i].get_pos()
+        zombie_rect = zombie[0].get_rect(current_ms, SPRITE_MAP)
+        zombie[0].set_pos(
+            tomb_pos[0] + 100 - zombie_rect.width / 2, tomb_pos[1] + 190 - zombie_rect.height
+        )
 
     ## Hammer as the mouse
     mouse_pos_x, mouse_pos_y = pygame.mouse.get_pos()
@@ -59,9 +86,10 @@ while True:
     for tomb in tombs:
         tomb.draw_tomb_stone(screen, SPRITE_MAP)
 
-    zombie_rect = zombie.get_rect(current_ms, SPRITE_MAP)
-    zombie.set_pos(190 - zombie_rect.width / 2, 290 - zombie_rect.height)
-    zombie.draw(screen, current_ms, SPRITE_MAP)
+    for zombie in zombies:
+        if not zombie[1]:
+            continue
+        zombie[0].draw(screen, current_ms, SPRITE_MAP)
 
     ## Tomb dirt rock decoration
     for tomb in tombs:
