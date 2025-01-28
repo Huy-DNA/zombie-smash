@@ -1,13 +1,16 @@
 import pygame
 import random
 import datetime
+import time
 
 import events
 from objects.Hammer import Hammer
 from objects.SpawningSpot import SpawningSpot
 from objects.Level.Level import LevelHandle
 from objects.Point.Point import Point
+from objects.Time.Time import Time
 from constants import GRASS_IDX, ICON_PATH, SCREEN_SIZE, SPRITE_MAP, SCREEN_WIDTH, SCREEN_HEIGHT
+
 import os
 
 pygame.init()
@@ -39,19 +42,23 @@ except pygame.error as e:
 
 
 # current scene and game states
-level_object = LevelHandle()
-point_object = Point()
-
-pygame.time.set_timer(events.SPAWN_EVENT, level_object.current_level, loops=0)
-
 hits = 0
 misses = 0
+game_over = False
+game_result = ""
+
+level_object = LevelHandle()
+point_object = Point(hits, misses)
+time_object = Time(93)
+
+pygame.time.set_timer(events.SPAWN_EVENT, level_object.get_current_level(), loops=0)
+
 clock = pygame.time.Clock()
 last_mouse_state = pygame.mouse.get_pressed()
 running = True
 
 
-while running:    
+while running:         
     current_ms = pygame.time.get_ticks()
     mouse_pos_x, mouse_pos_y = pygame.mouse.get_pos()
 
@@ -80,6 +87,14 @@ while running:
                 if not spot.has_zombie() and random.random() < 0.3:
                     spot.spawn_zombie()
 
+    # check game over condition
+    if game_over:
+        point_object.draw_ending_scene(game_result, level_object)
+        pygame.mouse.set_visible(True)        
+        if level_object.get_current_scene() == "Menu":
+            game_over = False
+        else:
+            continue
     ## Try despawning zombies
     for spot in spawning_spots:
         if spot.get_spawned_time() > 3000:
@@ -93,13 +108,14 @@ while running:
     ##################################
     # Render stage #
 
-    if level_object.current_scene == "Menu":
+    if level_object.get_current_scene() == "Menu":
         screen.blit(background_image, (0,0))
         pygame.mouse.set_visible(True)
         # reset the hits, misses point
         hits = 0
         misses = 0
-    else:        
+    else:
+        loading_start_time = pygame.time.get_ticks()        
         ## Grass lawn background
         screen.blit(SPRITE_MAP[GRASS_IDX], (0, 0))
 
@@ -111,25 +127,39 @@ while running:
         hammer.draw(screen, SPRITE_MAP)           
 
         # Display the point
-        point_object.display_hit_miss(hits,misses)
+        if hits == 3:
+            game_result = "Victory"
+            game_over = True
+            pygame.mouse.set_visible(True)
+        elif misses == 2:
+            game_result = "Lose"
+            game_over = True
+            pygame.mouse.set_visible(True)
+        else:
+            point_object.display_hit_miss(hits,misses)
+            # Render timer        
+            time_up = time_object.display_countdown_time()
+            if time_up:
+                print("Time's up")
 
         pygame.mouse.set_visible(False)
+        
 
     ##################################
     # Commit changes #
     # scene render
-    if level_object.current_scene == "Menu":
+    if level_object.get_current_scene() == "Menu":
         level_object.draw_menu()        
-    elif level_object.current_level == "Easy":        
-        level_object.draw_game_scene("Easy")                
-    elif level_object.current_scene == "Medium":
-        level_object.draw_game_scene("Medium")          
+    elif level_object.get_current_scene() == "Easy":    
+        # display_loading_screen()        
+        level_object.draw_game_scene("Easy")
+    elif level_object.get_current_scene() == "Medium":
+        level_object.draw_game_scene("Medium")
     else:
         level_object.draw_game_scene("Hard")                
     
     pygame.display.flip()
 
-    
 
     clock.tick(60)
 
