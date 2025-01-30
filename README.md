@@ -1,5 +1,7 @@
 # Zombie-smash
 
+This is the first of the more formal tries at `pygame`, because of school projects ;).
+
 ## Development setup
 
 ### Nix
@@ -13,20 +15,41 @@ nix develop [--command <shell>]
 1. Install [`uv`](https://docs.astral.sh/uv/getting-started/installation/).
 2. Run `uv run src/main.py` to run the game.
 
+## References
+
+Some good `pygame` references:
+  - What `pygame` is & its inception & philosophy: [pygame doc](https://www.pygame.org/docs/tut/PygameIntro.html)
+  - Thirteen helpful tips: [pygame doc](https://www.pygame.org/docs/tut/newbieguide.html)
+  - What to expect from pygame from the first principles: [Why pygame is slow](https://blubberquark.tumblr.com/post/630054903238262784/why-pygame-is-slow)
+
 ## Design
+
+- Choices:
+  - Only abstract out necessary components, in this case, sprites - [`Animatable` sprites](/src/sprites/Animatable.py) and [`Static` sprites](/src/sprites/Static.py).
+  - Other than the highly reusuable sprite-related classes, most other components are built up in an ad-hoc fashion for faster shipping & flexibility & receptive to changes.
+
+In the next subsections, the highly abstracted sprites-related classes are documented.
 
 ### Sprite map
 
 - A `SpriteMap` is simply a list of `pygame.Surface`, which is a preloaded list of images.
-- An index into the `SpriteMap` represents an image to be rendered.
+- An index into the `SpriteMap` represents an image to be rendered. Any sprites wanting to render an image will use these indexes.
+- Pros: Memory savings.
 
-### Animation
+### Animatable sprites
 
 Most effort are spent abstracting out animations:
-- `Animation`: Simply a sequence of indexes into the `SpriteMap`, which can loop (`should_loop`)
-- `AnimationSet`: A sequence of animations. A game object's state can be shown as a combination of multiple animations, for example *zombie spawning* can be (1) digging a hole and appear (2) shifting left and right (loop).
-- `Animatable`: An animatable game object, which can switch between animation sets, depending on its state. Each state of the game object has a corresponding method to switch to the corresponding animation set. For example, `NormalZombie`'s `spawn`, `despawn` or `kill`. An `Animatable` knows its current time (so that it can determine which frame in the `AnimationSet` to draw) and can draw itself.
+- `Animation`: A sequence of images, which internally is a sequence of indexes into `SpriteMap`.
+- `AnimationSet`: A sequence of animations.
+  - Motivation: A game object's state may require it to undergo different animations. For example, a *zombie* with the state *spawning* must undergo two animations (1) digging a hole and appearing (2) shifting left and right continuously.
+  - Therefore, `AnimationSet` is a sequence of `Animation`s & also has a field called `fps` to control the speed of animation.
+  - Pros: Allow reusing declared animations.
+  - Cons: Currently not utilized (all `AnimationSet`s currently only contain one `Animation`).
+- `Animatable`:
+  - A base class for animatable game objects (i.e zombie, hammer).
+  - A game object can switch between states. Each state should have an associated animation set. The methods on a game object that change its state should switch to the associated animation set.
+  - Therefore, `Animatable` provides methods to allows switching between animation sets, setting positions, rendering the animation based on current time.
 
-### Static
+### Static sprites
 
-A static game object is represented by the `Static` class, which knows about its position and can draw itself.
+A static game object is represented by the `Static` class, which allows setting its position & rendering based on current time.
