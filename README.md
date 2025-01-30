@@ -36,7 +36,7 @@ Some good `pygame` references:
 - Tips:
   - Make use of `Surface` & `Rect`. They are efficient & have diverse library functions in the library.
   - Should pre-convert images - `Surface.convert`.
-  - Alphakey-blitting & per-pixel alpha are not the same thing.
+  - Alphakey-blitting & alpha & per-pixel alpha are not the same thing.
 
 ## Design
 
