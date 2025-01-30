@@ -22,6 +22,22 @@ Some good `pygame` references:
   - Thirteen helpful tips: [pygame doc](https://www.pygame.org/docs/tut/newbieguide.html)
   - What to expect from pygame from the first principles: [Why pygame is slow](https://blubberquark.tumblr.com/post/630054903238262784/why-pygame-is-slow)
 
+### Key takeaways
+
+- What `pygame` is:
+  - `pygame` is intented to be a *lightweight* *Pythonic* (yes, not just Python) *wrapper* for the *portable C SDL library*, which exposes API for multimedia accesses.
+  - `pygame` was taken on by its author when a similar library `PySDL` is dead, which the author deems to be forcing a C-like style.
+  - `pygame` performs software rendering (maybe by default). This means the CPU does the rendering, which prevents the CPU from performing other works.
+
+- What `pygame` really is and is not:
+  - `pygame` is intended to be a very simple, unopinionated library - it's not a game engine.
+  - `pygame` can really run fast enough, based on your game. If writtent correctly, most of the time spent should be in the SDL C library. Although, some problems are inherent limited by the Python runtime, such as the GIL.
+
+- Tips:
+  - Make use of `Surface` & `Rect`. They are efficient & have diverse library functions in the library.
+  - Should pre-convert images - `Surface.convert`.
+  - Alphakey-blitting & per-pixel alpha are not the same thing.
+
 ## Design
 
 - Choices:
