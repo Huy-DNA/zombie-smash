@@ -31,5 +31,12 @@ class Time():
         
     def reduce_time_by_ms(self,ms):
         self.start_time += ms
+
+    def set_time(self, time):
+        self.total_time = time
+        self.start_ticks = pygame.time.get_ticks()
+
+    def get_time(self):
+        return self.total_time
             
 

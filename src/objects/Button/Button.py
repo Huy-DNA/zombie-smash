@@ -3,8 +3,13 @@ from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 black = (0,0,0)
+# Loading bar dimensions
+loading_bar_width = 600
+loading_bar_height = 40
+loading_bar_x = (SCREEN_WIDTH - loading_bar_width) // 2
+loading_bar_y = SCREEN_HEIGHT // 2
 
-def draw_button(text, x, y, width, height, color, hover_color, action=None):
+def draw_button(text, x, y, width, height, color, hover_color, action=None, set_point=None, set_time=None):
     """Draws a button and executes an action when clicked"""
     """x, y: the top-left corner position of the button"""
     """width, height: the dimesions of the button"""
@@ -14,7 +19,12 @@ def draw_button(text, x, y, width, height, color, hover_color, action=None):
     if x < mouse[0] < x + width and y < mouse[1] < y + height:
         pygame.draw.rect(screen, hover_color, (x, y, width, height))
         if click[0] == 1 and action is not None:
-            display_loading_screen(action(), text)
+            display_loading_screen(action(), text)            
+            if set_point is not None:
+                set_point()
+
+            if set_time is not None:
+                set_time()                    
     else:
         pygame.draw.rect(screen, color, (x, y, width, height))
 
@@ -24,11 +34,7 @@ def draw_button(text, x, y, width, height, color, hover_color, action=None):
     text_rect = text_surface.get_rect(center=(x + width // 2, y + height // 2))
     screen.blit(text_surface, text_rect)
 
-# Loading bar dimensions
-loading_bar_width = 600
-loading_bar_height = 40
-loading_bar_x = (SCREEN_WIDTH - loading_bar_width) // 2
-loading_bar_y = SCREEN_HEIGHT // 2
+
 
 def display_loading_screen(action=None, scene=""):
     """Display a loading screen with a progress bar before entering the given scene"""
@@ -40,10 +46,7 @@ def display_loading_screen(action=None, scene=""):
     loading_text = font.render(f"Loading {scene}", True, (0,0,0))
     text_rect = loading_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100))
     screen.blit(loading_text, text_rect)
-    progress = 0
-
-    # start time for loading
-    loading_start_time = pygame.time.get_ticks()
+    progress = 0    
 
 
     while progress <= 100:
@@ -59,12 +62,7 @@ def display_loading_screen(action=None, scene=""):
 
         pygame.time.delay(20)
 
-        progress += 1    
-
-    # Calculate loading duration
-    loading_duration = pygame.time.get_ticks() - loading_start_time
-
-    # time.reduce_time_by_ms(loading_duration)
+        progress += 1       
 
     # Clear the event queue
     pygame.event.clear()

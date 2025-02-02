@@ -12,8 +12,8 @@ blue = (0, 0, 255)
 gray = (200, 200, 200)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-EASY = 1000
-MEDIUM = 800
+EASY = 1500
+MEDIUM = 1000
 HARD = 500
 
 MENU_SCENE = "Menu"
@@ -21,7 +21,9 @@ EASY_SCENE = "Easy"
 MEDIUM_SCENE = "Medium"
 HARD_SCENE = "Hard"
 
-
+WIN = 'win'
+LOSE = 'lose'
+CONTINUE = 'continue'
 
 
 class LevelHandle:
@@ -29,11 +31,14 @@ class LevelHandle:
         self.width_button = 200
         self.height_button = 50        
         self.current_level = EASY
-        self.current_scene = MENU_SCENE                       
+        self.current_scene = MENU_SCENE
+        self.gameover = False
+        self.game_state = CONTINUE
 
     def go_to_menu(self):
         """Switch back to the menu"""        
         self.current_scene = MENU_SCENE
+        self.game_state = CONTINUE
     
     def play_again(self, prev_scene):
         """Switch back to the previous game"""
@@ -44,17 +49,19 @@ class LevelHandle:
         else:
             self.current_scene = HARD_SCENE
 
+        self.game_state = CONTINUE
+
     def easy_level(self):
         """switch to easy scene"""        
-        self.current_scene = EASY_SCENE
+        self.current_scene = EASY_SCENE        
 
     def medium_level(self):
         """switch to medium scene"""
-        self.current_scene = MEDIUM_SCENE
+        self.current_scene = MEDIUM_SCENE        
 
     def hard_level(self):
         """switch to hard scene"""        
-        self.current_scene = HARD_SCENE
+        self.current_scene = HARD_SCENE        
 
     def draw_menu(self):
         """Draws the main menu with buttons."""
@@ -85,7 +92,7 @@ class LevelHandle:
         screen.blit(text_surface, (10, 10))
 
         # Back button to return the menu
-        draw_button("Back", SCREEN_WIDTH - 200, 10, 100, 50, gray, (150,150,150), self.go_to_menu)
+        draw_button("Back", SCREEN_WIDTH - 200, 10, 100, 50, gray, (150,150,150), self.go_to_menu)        
 
     def get_current_scene(self):
         return self.current_scene
@@ -95,3 +102,12 @@ class LevelHandle:
     
     def set_current_scene(self, scene):
         self.current_scene = scene
+
+    def get_gameover(self):
+        return self.gameover
+        
+    def set_game_state(self, state):
+        self.game_state = state
+
+    def get_game_state(self):
+        return self.game_state

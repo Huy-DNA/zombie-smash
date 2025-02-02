@@ -1,10 +1,15 @@
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT
-from objects.Level.Level import LevelHandle
+from objects.Level.Level import LevelHandle, WIN, LOSE
+from objects.Time.Time import Time
 from objects.Button.Button import draw_button
+import os
 
 import pygame
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+
+
 
 def draw_blur_background():
     """Draw a semi-transparent gray overlay for a blur effect."""
@@ -17,7 +22,6 @@ class Point():
     def __init__(self, hits, misses):
         self.hits = hits
         self.misses = misses
-        self.game_over = False
 
     def display_hit_miss(self,hits, misses):
         # render the text
@@ -50,26 +54,22 @@ class Point():
     def set_misses(self, misses):
         self.misses = misses
 
-    def draw_ending_scene(self, text, levelObject: LevelHandle):
-        # fill the screen with shadow background
-        draw_blur_background()
+    def set_points(self):
+        self.hits = 0
+        self.misses = 0
 
-        # Initialize font
-        font = pygame.font.SysFont(None, 74)
-        # Render Victory text
-        text = font.render(f"{text}", True, (255, 232, 147))
-        rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100))
-        screen.blit(text, rect)
-
-        print(levelObject.get_current_scene())
-        draw_button("Return", SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 , 200, 50, (255,255,255), (0, 200, 0), levelObject.go_to_menu)
-        draw_button("Play again", SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 100, 200, 50, (255,255,255), (0, 200, 0), levelObject.go_to_menu)
+    def draw_ending_scene(self,levelObject: LevelHandle, timeObject: Time):
+        # Initialize font                
+        
+        # draw button when win or lose
+        draw_button("Return", SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 , 200, 50, (255,255,255), (0, 200, 0), levelObject.go_to_menu, set_point=self.set_points)
+        if levelObject.get_game_state() == LOSE:
+            draw_button("Play again", SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 100, 200, 50, (255,255,255), (0, 200, 0), 
+                        lambda: (levelObject.play_again(levelObject.get_current_scene())), set_point=self.set_points, set_time=timeObject.set_time(93))
+        else:
+            draw_button("Continue", SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 100, 200, 50, (255,255,255), (0, 200, 0), lambda: levelObject.go_to_menu, set_point=self.set_points, set_time=timeObject.set_time(93))
+                    
 
         # Update the display
-        pygame.display.flip()
-
-    def get_game_over(self):
-        return self.game_over
-    
-    def set_game_over(self, current_game_state):
-        self.game_over = current_game_state
+        pygame.mouse.set_visible(True)        
+        pygame.display.flip()    
