@@ -6,7 +6,7 @@ import time
 import events
 from objects.Hammer import Hammer
 from objects.SpawningSpot import SpawningSpot
-from objects.Level.Level import LevelHandle, WIN, LOSE, CONTINUE, EASY, MEDIUM, HARD
+from objects.Level.Level import LevelHandle, WIN, LOSE, TIME_UP, EASY_SCENE, MEDIUM_SCENE, HARD_SCENE, MENU_SCENE
 from objects.Point.Point import Point
 from objects.Time.Time import Time
 from constants import GRASS_IDX, ICON_PATH, SCREEN_SIZE, SPRITE_MAP, SCREEN_WIDTH, SCREEN_HEIGHT
@@ -42,7 +42,7 @@ except pygame.error as e:
 
 # load win, lose bg
 try:
-    win_image = pygame.image.load(f"{os.getcwd()}/assets/background/win.webp")
+    win_image = pygame.image.load(f"{os.getcwd()}/assets/background/victory-scene.webp")
     win_image = pygame.transform.scale(win_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
     loss_image = pygame.image.load(f"{os.getcwd()}/assets/background/loss.webp")
@@ -56,7 +56,6 @@ except pygame.error as e:
 # current scene and game states
 # hits = 0
 # misses = 0
-game_result = ""
 
 # check game condition
 def check_game_condition():
@@ -68,11 +67,11 @@ def check_game_condition():
     if point_object.get_hits() == win:
         level_object.set_game_state(WIN)
         return
-    
-    if level_object.get_current_scene == EASY:
+        
+    if level_object.get_current_scene() == EASY_SCENE:
         if point_object.get_misses() == easy_lose:
             level_object.set_game_state(LOSE)
-    elif level_object.get_current_scene == LOSE:
+    elif level_object.get_current_scene() == MEDIUM_SCENE:
         if point_object.get_misses() == med_lose:
             level_object.set_game_state(LOSE)
     else:
@@ -82,6 +81,7 @@ def check_game_condition():
 level_object = LevelHandle()
 point_object = Point(0, 0)
 time_object = Time(93)
+start = False
 
 pygame.time.set_timer(events.SPAWN_EVENT, level_object.get_current_level(), loops=0)
 
@@ -104,13 +104,13 @@ while running:
                     spot.spawn_zombie()
 
     # check game over condition
-    if level_object.get_game_state() == LOSE:
+    if level_object.get_game_state() == LOSE or level_object.get_game_state() == TIME_UP and level_object.get_current_scene() != MENU_SCENE:
         screen.blit(loss_image, (0,0))
-        point_object.draw_ending_scene(level_object, time_object)        
+        point_object.draw_ending_scene(level_object, time_object)          
         continue
-    elif level_object.get_game_state() == WIN:
+    elif level_object.get_game_state() == WIN and level_object.get_current_scene() != MENU_SCENE:
         screen.blit(win_image, (0,0))
-        point_object.draw_ending_scene(level_object, time_object)
+        point_object.draw_ending_scene(level_object, time_object)        
         continue     
 
     ##################################
@@ -119,26 +119,29 @@ while running:
     
     current_mouse_state = pygame.mouse.get_pressed()
     if last_mouse_state[0] == 0 and current_mouse_state[0] == 1:
-        hammer.smash()
-        for spot in spawning_spots:
-            active_zombie = spot.get_active_zombie()
-            if active_zombie is not None and active_zombie.get_rect(SPRITE_MAP).collidepoint(mouse_pos_x, mouse_pos_y):
-                spot.kill_zombie()
-                #hits += 1
-                point_object.set_hits(point_object.get_hits() + 1)
-                break
-        else:
-            # misses += 1
-            point_object.set_misses(point_object.get_misses() + 1)
+        if start:
+            hammer.smash()
+            for spot in spawning_spots:
+                active_zombie = spot.get_active_zombie()
+                if active_zombie is not None and active_zombie.get_rect(SPRITE_MAP).collidepoint(mouse_pos_x, mouse_pos_y):
+                    spot.kill_zombie()
+                    #hits += 1
+                    point_object.set_hits(point_object.get_hits() + 1)
+                    break
+            else:
+                # misses += 1                
+                point_object.set_misses(point_object.get_misses() + 1)
+        else:            
+            time_object.set_time(92)
     last_mouse_state = current_mouse_state
 
     
-    
-
     ## Try despawning zombies
     for spot in spawning_spots:
-        if spot.get_spawned_time() > level_object.get_current_level():
+        if spot.get_spawned_time() >= level_object.get_current_level():
             spot.despawn_zombie()
+        # if not spot.has_zombie() and spot.can_spawn(level_object.get_current_level()):
+        #     spot.despawn_zombie()
 
     ##################################
     # Position update stage #
@@ -152,8 +155,7 @@ while running:
         screen.blit(background_image, (0,0))
         pygame.mouse.set_visible(True)
         # reset the hits, misses point               
-    else:        
-        loading_start_time = pygame.time.get_ticks()        
+    else:                
         ## Grass lawn background
         screen.blit(SPRITE_MAP[GRASS_IDX], (0, 0))
 
@@ -165,11 +167,11 @@ while running:
         hammer.draw(screen, SPRITE_MAP)           
 
         # Display the point                       
-        point_object.display_hit_miss(point_object.get_hits(), point_object.get_misses())
+        point_object.display_hit_miss(point_object.get_hits(), point_object.get_misses(), 10)
         # Render timer        
         time_up = time_object.display_countdown_time()
         if time_up:
-            print("Time's up")
+            level_object.set_game_state(TIME_UP) 
 
         pygame.mouse.set_visible(False)
         
@@ -177,23 +179,26 @@ while running:
     ##################################
     # Commit changes #
     # scene render
-    if level_object.get_current_scene() == "Menu":
-        level_object.draw_menu()        
-    elif level_object.get_current_scene() == "Easy":    
+    if level_object.get_current_scene() == MENU_SCENE:
+        level_object.draw_menu()
+        start = False
+        point_object.set_points()
+    elif level_object.get_current_scene() == EASY_SCENE:    
         # display_loading_screen()        
-        level_object.draw_game_scene("Easy")
-
+        level_object.draw_game_scene(EASY_SCENE)        
         # check win lose condition
         check_game_condition()
-    elif level_object.get_current_scene() == "Medium":
-        level_object.draw_game_scene("Medium")
+        start = True
+    elif level_object.get_current_scene() == MEDIUM_SCENE:
+        level_object.draw_game_scene(MEDIUM_SCENE)
         # check win lose condition
         check_game_condition()
+        start = True
     else:
-        level_object.draw_game_scene("Hard")
+        level_object.draw_game_scene(HARD_SCENE)
         # check win lose condition
         check_game_condition()
-        
+        start = True
     pygame.display.flip()
 
 

@@ -26,6 +26,7 @@ class SpawningSpot:
         self.__start_spawn_ms = None
 
         self.__tomb = Tomb(base_pos=self.__get_tomb_pos())
+        
 
     def __get_zombie_pos(self) -> tuple[float, float]:
         return (self.__base_pos[0] + 90, self.__base_pos[1] + 200)
@@ -58,7 +59,7 @@ class SpawningSpot:
     def spawn_zombie(self):
         self.__active_zombie = NormalZombie(base_pos=self.__get_zombie_pos())
         self.__active_zombie.spawn()
-        self.__start_spawn_ms = pygame.time.get_ticks()
+        self.__start_spawn_ms = pygame.time.get_ticks()        
 
     def kill_zombie(self):
         self.__prune_transitioned_out_zombies()
@@ -85,3 +86,4 @@ class SpawningSpot:
         self.__prune_transitioned_out_zombies()
         for zombie in self.__transitioning_out_zombies:
             zombie.draw(screen, sprites)
+    
