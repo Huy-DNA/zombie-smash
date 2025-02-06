@@ -60,8 +60,8 @@ except pygame.error as e:
 def check_game_condition():
     win = 5
     easy_lose = 3
-    med_lose = 2
-    hard_lose = 1
+    med_lose = 3
+    hard_lose = 2
 
     if point_object.get_hits() == win:
         level_object.set_game_state(WIN)
