@@ -135,7 +135,7 @@ while running:
                 # misses += 1                
                 point_object.set_misses(point_object.get_misses() + 1)
         else:            
-            time_object.set_time(10)
+            time_object.set_time(90)
     last_mouse_state = current_mouse_state
 
     

@@ -45,20 +45,7 @@ class Point():
         x_position = (SCREEN_WIDTH - text_width) // 2        
 
         screen.blit(text_surface, (x_position, y_position))
-
-    def display_time_up(self, y_position=10, colors=(255,0,0), font_size=50):
-        # render the text
-        font = pygame.font.SysFont(None, font_size)
-        
-        # Render messagge
-        text = "Time's up"
-        text_surface = font.render(text,True,colors)
-
-        # Blit the text surface to the screen
-        text_width = text_surface.get_width()
-        x_position = (SCREEN_WIDTH - text_width) // 2        
-
-        screen.blit(text_surface, (x_position, y_position))
+    
     def get_hits(self):
         return self.hits
     
