@@ -12,9 +12,9 @@ blue = (0, 0, 255)
 gray = (200, 200, 200)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-EASY = 1500
-MEDIUM = 1000
-HARD = 600
+EASY = 1800
+MEDIUM = 1500
+HARD = 1000
 
 MENU_SCENE = "Menu"
 EASY_SCENE = "Easy"
@@ -34,23 +34,31 @@ class LevelHandle:
         self.height_button = 50        
         self.current_level = EASY
         self.current_scene = MENU_SCENE
-        self.gameover = False
         self.game_state = CONTINUE
 
     def go_to_menu(self):
         """Switch back to the menu"""        
         self.set_current_scene(MENU_SCENE)
         self.set_game_state(CONTINUE)
-        pygame.event.clear()        
+        
+    def go_to_next_level(self):
+        if self.get_current_scene() == EASY_SCENE:
+            self.set_current_scene(MEDIUM_SCENE)
+        elif self.get_current_scene() == MEDIUM_SCENE:
+            self.set_current_scene(HARD_SCENE)
+        else:
+            self.set_current_scene(MENU_SCENE)
+        
+        self.set_game_state(CONTINUE)        
     
     def play_again(self, prev_scene):
         """Switch back to the previous game"""
         if prev_scene == EASY_SCENE:
-            self.current_scene = EASY_SCENE
+            self.set_current_scene(EASY_SCENE)
         elif prev_scene == MEDIUM_SCENE:
-            self.current_scene = MEDIUM_SCENE
+            self.set_current_scene(MEDIUM_SCENE)
         else:
-            self.current_scene = HARD_SCENE
+            self.set_current_scene(HARD_SCENE)
 
         self.set_game_state(CONTINUE)
 
@@ -58,7 +66,7 @@ class LevelHandle:
         """switch to easy scene"""        
         self.current_scene = EASY_SCENE
         if self.game_state != CONTINUE:
-            self.set_game_state(CONTINUE)     
+            self.set_game_state(CONTINUE)
 
     def medium_level(self):
         """switch to medium scene"""
@@ -110,10 +118,7 @@ class LevelHandle:
         return self.current_level
     
     def set_current_scene(self, scene):
-        self.current_scene = scene
-
-    def get_gameover(self):
-        return self.gameover
+        self.current_scene = scene    
         
     def set_game_state(self, state):
         self.game_state = state

@@ -11,6 +11,8 @@ class Time():
         self.start_time = time.time()
         self.start_ticks = pygame.time.get_ticks() # Record the time started
         self.total_time = total_time # Set the total time to countdown
+        self.minutes = 0
+        self.seconds = 0
 
     def display_countdown_time(self):        
         font = pygame.font.Font(None, 74)
@@ -21,6 +23,10 @@ class Time():
         minutes = remaining_time // 60
         seconds = remaining_time % 60
         timer_text = f"{int(minutes):02}:{int(seconds):02}"
+
+        # set minutes and seconds left
+        self.set_minutes(minutes)
+        self.set_seconds(seconds)
 
         # render the timer
         text_surface = font.render(timer_text, True, (255,0,0))
@@ -38,5 +44,17 @@ class Time():
 
     def get_time(self):
         return self.total_time
+    
+    def get_minutes(self):
+        return self.minutes
+    
+    def set_minutes(self, minutes):
+        self.minutes = minutes
+    
+    def get_seconds(self):
+        return self.seconds
+    
+    def set_seconds(self, seconds):
+        self.seconds = seconds
             
 

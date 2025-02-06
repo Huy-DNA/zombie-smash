@@ -9,7 +9,12 @@ import pygame
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 
-
+BLACK = (0, 0, 0)
+TRANSPARENT_BLACK = (0, 0, 0, 128)  # Semi-transparent overlay
+BORDER_COLOR = (239, 176, 54)  # white
+WHITE = (255, 255, 255)
+VICTORY_COLOR = (255, 217, 95)
+LOSE_COLOR = (229, 32, 32)
 
 def draw_blur_background():
     """Draw a semi-transparent gray overlay for a blur effect."""
@@ -70,22 +75,69 @@ class Point():
         self.hits = 0
         self.misses = 0
 
-    def draw_ending_scene(self,levelObject: LevelHandle, timeObject: Time):
-        # Initialize font                
-        
-        # draw button when win or lose
-        draw_button("Return", (SCREEN_WIDTH - 400) // 2, SCREEN_HEIGHT // 2 + 200, 200, 50, (255,255,255), (0, 200, 0), levelObject.go_to_menu, set_point=self.set_points, set_time=timeObject.set_time(92))
-        if levelObject.get_game_state() == LOSE or levelObject.get_game_state() == TIME_UP:
-            # Display time's up
-            self.display_hit_miss(self.hits, self.misses, colors=(238, 238, 238), font_size=70)
-            draw_button("Play again", (SCREEN_WIDTH + 100) // 2, SCREEN_HEIGHT // 2 + 200, 200, 50, (255,255,255), (0, 200, 0), 
-                        lambda: (levelObject.play_again(levelObject.get_current_scene())), set_point=self.set_points, set_time=timeObject.set_time(92))
-        else:            
-            self.display_hit_miss(self.hits, self.misses, SCREEN_HEIGHT // 2 + 50, colors=(142, 22, 22), font_size=70)
-            draw_button("Continue", (SCREEN_WIDTH + 100) // 2, SCREEN_HEIGHT // 2 + 200, 200, 50, (255,255,255), (0, 200, 0), lambda: levelObject.go_to_menu, set_point=self.set_points, set_time=timeObject.set_time(92))
+    def draw_scenes(self, levelObject: LevelHandle, timeObject: Time):
+        font = pygame.font.Font(None, 36)
+        # create dark transparent overlay
+        overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
+        overlay.fill(TRANSPARENT_BLACK)
+        screen.blit(overlay, (0,0))
+
+        # rectangle dimensions
+        rect_width, rect_height = 500, 200
+        rect_x = (SCREEN_WIDTH - rect_width) // 2
+        rect_y = (SCREEN_HEIGHT - rect_height) // 2
+
+        # draw border
+        border_thickness = 5
+        pygame.draw.rect(screen, BORDER_COLOR, (rect_x - border_thickness, rect_y - border_thickness, 
+                                                rect_width + 2 * border_thickness, rect_height + 2 * border_thickness), 0, 10)
+
+        # draw inner
+        pygame.draw.rect(screen, WHITE, (rect_x, rect_y, rect_width, rect_height))
+        # render text        
+        time_res = ''
         if levelObject.get_game_state() == TIME_UP:
-            # Display time's up
-            self.display_time_up(70, font_size=70)                    
+            time_res = "Time's up"
+        else:
+            if timeObject.get_minutes() < 1:
+                time_res = f"{timeObject.get_seconds()}s"
+            else:
+                time_res = f"{timeObject.get_minutes()}:{timeObject.get_seconds()}"
+
+        level_text = font.render(f"{"Level:": <11}{levelObject.get_current_scene() :^70}", True, BLACK)
+        hits_text = font.render(f"{"Hits:": <11}{self.get_hits() :^70}", True, BLACK)
+        misses_text = font.render(f"{"Misses:": <10}{self.get_misses() :^65}", True, BLACK)
+
+        # Time render
+        time = f"{"Time left:" :<10}{time_res :^69}"
+        time_text = font.render(time, True, BLACK)
+        
+        # Position text
+        screen.blit(level_text, (rect_x + 20, rect_y + 40))
+        screen.blit(hits_text, (rect_x + 20, rect_y + 80))
+        screen.blit(misses_text, (rect_x + 20, rect_y + 120))
+        screen.blit(time_text, (rect_x + 20, rect_y + 160))
+
+    def draw_ending_scene(self,levelObject: LevelHandle, timeObject: Time):
+        # render lose win text
+        font_state = pygame.font.Font(None, 100)
+        win_text = font_state.render("Victory", True, VICTORY_COLOR)
+        lose_text = font_state.render("Lose", True, LOSE_COLOR)
+        
+        self.draw_scenes(levelObject, timeObject)
+        # draw button when win or lose
+        draw_button("Return", (SCREEN_WIDTH - 400) // 2, SCREEN_HEIGHT // 2 + 200, 200, 50, (255,255,255), (0, 200, 0), levelObject.go_to_menu, set_point=self.set_points, set_time=timeObject.set_time(90))
+        if levelObject.get_game_state() == LOSE or levelObject.get_game_state() == TIME_UP:
+            # Display lose text
+            screen.blit(lose_text, ((SCREEN_WIDTH - 200) // 2, 50))
+            # Draw button play again         
+            draw_button("Play again", (SCREEN_WIDTH + 50) // 2, SCREEN_HEIGHT // 2 + 200, 200, 50, (255,255,255), (0, 200, 0), 
+                        lambda: (levelObject.play_again(levelObject.get_current_scene())), set_point=self.set_points, set_time=timeObject.set_time(90))
+        else:            
+            # Display win text
+            screen.blit(win_text, ((SCREEN_WIDTH - 200) // 2, 50))
+            # draw button continue
+            draw_button("Continue", (SCREEN_WIDTH + 50) // 2, SCREEN_HEIGHT // 2 + 200, 200, 50, (255,255,255), (0, 200, 0), lambda: levelObject.go_to_next_level, set_point=self.set_points, set_time=timeObject.set_time(90))                          
                     
 
         # Update the display

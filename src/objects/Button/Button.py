@@ -19,7 +19,7 @@ def draw_button(text, x, y, width, height, color, hover_color, action=None, set_
     if x < mouse[0] < x + width and y < mouse[1] < y + height:
         pygame.draw.rect(screen, hover_color, (x, y, width, height))
         if click[0] == 1 and action is not None:
-            display_loading_screen(action, text)            
+            display_loading_screen(action(), text)            
             if set_point is not None:
                 set_point()
 
@@ -62,7 +62,7 @@ def display_loading_screen(action=None, scene=""):
 
         pygame.time.delay(20)
 
-        progress += 1       
+        progress += 10
 
     # Clear the event queue
     pygame.event.clear()

@@ -1,7 +1,6 @@
 import pygame
 import random
 import datetime
-import time
 
 import events
 from objects.Hammer import Hammer
@@ -67,7 +66,7 @@ def check_game_condition():
     if point_object.get_hits() == win:
         level_object.set_game_state(WIN)
         return
-        
+                
     if level_object.get_current_scene() == EASY_SCENE:
         if point_object.get_misses() == easy_lose:
             level_object.set_game_state(LOSE)
@@ -80,7 +79,7 @@ def check_game_condition():
 
 level_object = LevelHandle()
 point_object = Point(0, 0)
-time_object = Time(93)
+time_object = Time(90)
 start = False
 
 pygame.time.set_timer(events.SPAWN_EVENT, level_object.get_current_level(), loops=0)
@@ -103,15 +102,19 @@ while running:
                 if not spot.has_zombie() and random.random() < 0.3:
                     spot.spawn_zombie()
 
-    # check game over condition
-    if level_object.get_game_state() == LOSE or level_object.get_game_state() == TIME_UP and level_object.get_current_scene() != MENU_SCENE:
-        screen.blit(loss_image, (0,0))
+    # check game over condition    
+    if (level_object.get_game_state() == LOSE or level_object.get_game_state() == TIME_UP) and level_object.get_current_scene() != MENU_SCENE:
+        # screen.blit(loss_image, (0,0))
+        screen.blit(SPRITE_MAP[GRASS_IDX], (0, 0))        
+        
         point_object.draw_ending_scene(level_object, time_object)          
         continue
     elif level_object.get_game_state() == WIN and level_object.get_current_scene() != MENU_SCENE:
-        screen.blit(win_image, (0,0))
+        # screen.blit(win_image, (0,0))
+        screen.blit(SPRITE_MAP[GRASS_IDX], (0, 0))
+        
         point_object.draw_ending_scene(level_object, time_object)        
-        continue     
+        continue  
 
     ##################################
     # State update stage #    
@@ -132,7 +135,7 @@ while running:
                 # misses += 1                
                 point_object.set_misses(point_object.get_misses() + 1)
         else:            
-            time_object.set_time(92)
+            time_object.set_time(10)
     last_mouse_state = current_mouse_state
 
     
