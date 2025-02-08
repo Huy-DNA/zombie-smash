@@ -1,5 +1,6 @@
 import pygame
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
+import os
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 black = (0,0,0)
@@ -69,3 +70,32 @@ def display_loading_screen(action=None, scene=""):
 
     if action is not None:
         action()
+
+# def draw quit button
+def quit_button(button_pos_dim, optional_text=None, action=None):
+    mouse = pygame.mouse.get_pos() # get mouse position
+    click = pygame.mouse.get_pressed() # handle mouse clicked event
+    logout_icon = pygame.image.load(f"{os.getcwd()}/assets/turn-off.png")
+    logout_icon = pygame.transform.scale(logout_icon, (30, 30))
+    # button_pos_dim: x, y, width, height
+    x,y,width,height = button_pos_dim
+    
+    # handle mouse click
+    if x < mouse[0] < x + width and y < mouse[1] < y + height:
+        pygame.draw.rect(screen, (238,238,238), button_pos_dim)
+        if click[0] and action is not None:
+            action()
+    else:
+        pygame.draw.rect(screen, (180,180,180), button_pos_dim)
+
+    if optional_text is None:
+        # icon x, y position
+        icon_x = x + (width - logout_icon.get_width()) // 2
+        icon_y = y + (height - logout_icon.get_height()) // 2
+        screen.blit(logout_icon, (icon_x, icon_y))
+    else:
+        font = pygame.font.Font(None, 30)
+        text_surface = font.render(optional_text, True, (0,0,0))
+        text_x = x + (width - text_surface.get_width()) // 2
+        text_y = y + (height - text_surface.get_height()) // 2
+        screen.blit(text_surface, (text_x, text_y))

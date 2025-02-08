@@ -13,8 +13,8 @@ gray = (200, 200, 200)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 EASY = 1800
-MEDIUM = 1500
-HARD = 1000
+MEDIUM = 1200
+HARD = 900
 
 MENU_SCENE = "Menu"
 EASY_SCENE = "Easy"

@@ -76,11 +76,77 @@ def check_game_condition():
     else:
         if point_object.get_misses() == hard_lose:
             level_object.set_game_state(LOSE)
+# def draw quit button
+def quit_button(button_pos_dim, optional_text=None, action=None):
+    mouse = pygame.mouse.get_pos() # get mouse position
+    click = pygame.mouse.get_pressed() # handle mouse clicked event
+    logout_icon = pygame.image.load(f"{os.getcwd()}/assets/turn-off.png")
+    logout_icon = pygame.transform.scale(logout_icon, (30, 30))
+    # button_pos_dim: x, y, width, height
+    x,y,width,height = button_pos_dim
+    
+    # handle mouse click
+    if x < mouse[0] < x + width and y < mouse[1] < y + height:
+        pygame.draw.rect(screen, (238,238,238), button_pos_dim)
+        if click[0] and action is not None:
+            action()
+    else:
+        pygame.draw.rect(screen, (180,180,180), button_pos_dim)
+
+    if optional_text is None:
+        # icon x, y position
+        icon_x = x + (width - logout_icon.get_width()) // 2
+        icon_y = y + (height - logout_icon.get_height()) // 2
+        screen.blit(logout_icon, (icon_x, icon_y))
+    else:
+        font = pygame.font.Font(None, 30)
+        text_surface = font.render(optional_text, True, (0,0,0))
+        text_x = x + (width - text_surface.get_width()) // 2
+        text_y = y + (height - text_surface.get_height()) // 2
+        screen.blit(text_surface, (text_x, text_y))
+
+
+
+def display_quit_screen():
+    font = pygame.font.Font(None, 50) # create font size
+    # color
+    TRANSPARENT_BLACK = (0, 0, 0, 128)  # Semi-transparent overlay
+    WHITE = (255, 255, 255)
+    BLACK = (0,0,0)
+    # create dark transparent overlay
+    overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
+    overlay.fill(TRANSPARENT_BLACK)
+    screen.blit(overlay, (0,0))
+    # rect width height
+    rect_w, rect_h = 500, 200
+    rect_x, rect_y = (SCREEN_WIDTH - rect_w) // 2, (SCREEN_HEIGHT - rect_h) // 2
+    # draw rect
+    pygame.draw.rect(screen, WHITE, (rect_x, rect_y, rect_w, rect_h))
+    # draw quit text
+    text_surface = font.render("DO YOU WANT TO QUIT?", True, BLACK)
+    text_x = rect_x + (rect_w - text_surface.get_width()) // 2
+    text_y = rect_y + (rect_h - text_surface.get_height()) // 2
+    screen.blit(text_surface, (text_x, text_y))
+
+    # draw yes, no button
+    yes_pos_dim = (rect_x - 100 + (rect_w - 100) // 2, rect_y + (rect_h - 40), 100, 30)
+    no_pos_dim = (rect_x + 100 + (rect_w - 100) // 2, rect_y + (rect_h - 40), 100, 30)
+    quit_button(yes_pos_dim, optional_text="YES", action=lambda: set_running(False))
+    quit_button(no_pos_dim,optional_text="NO", action=lambda: set_quit_screen(False))
+
+def set_quit_screen(val):
+    global quit_screen
+    quit_screen = val
+
+def set_running(val):
+    global running
+    running = val
 
 level_object = LevelHandle()
 point_object = Point(0, 0)
 time_object = Time(90)
 start = False
+quit_screen = False
 
 pygame.time.set_timer(events.SPAWN_EVENT, level_object.get_current_level(), loops=0)
 
@@ -118,7 +184,11 @@ while running:
 
     ##################################
     # State update stage #    
-    
+    if quit_screen:
+        screen.blit(background_image, (0,0))        
+        display_quit_screen()
+        pygame.display.flip()
+        continue
     
     current_mouse_state = pygame.mouse.get_pressed()
     if last_mouse_state[0] == 0 and current_mouse_state[0] == 1:
@@ -157,7 +227,9 @@ while running:
     if level_object.get_current_scene() == "Menu":
         screen.blit(background_image, (0,0))
         pygame.mouse.set_visible(True)
-        # reset the hits, misses point               
+        # Draw quit button
+        button_pos_dim = (SCREEN_WIDTH - 100, 10, 50, 50)
+        quit_button(button_pos_dim,action=lambda: set_quit_screen(True))
     else:                
         ## Grass lawn background
         screen.blit(SPRITE_MAP[GRASS_IDX], (0, 0))

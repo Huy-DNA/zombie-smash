@@ -30,7 +30,7 @@ class Time():
 
         # render the timer
         text_surface = font.render(timer_text, True, (255,0,0))
-        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        text_rect = text_surface.get_rect(center=(text_surface.get_width() - 50, text_surface.get_height() + 30))
         screen.blit(text_surface, text_rect)
 
         return remaining_time == 0
