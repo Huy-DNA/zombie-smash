@@ -1,5 +1,7 @@
 # Zombie-smash
 
+![image](https://github.com/user-attachments/assets/9deb70dc-66a3-43e2-b9d6-9c54362fbc6b)
+
 This is the first of the more formal tries at `pygame`, because of school projects ;).
 
 ## Development setup
