@@ -1,6 +1,6 @@
 # Zombie-smash
 
-![image](https://github.com/user-attachments/assets/9deb70dc-66a3-43e2-b9d6-9c54362fbc6b)
+![image](https://github.com/user-attachments/assets/149ff0d4-50cc-4923-be6c-6b29642e4135)
 
 This is the first of the more formal tries at `pygame`, because of school projects ;).
 
