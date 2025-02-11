@@ -28,3 +28,16 @@ GRASS_IDX = 34
 HAMMER_IDX = 35
 HAMMER_SMASH_ANIMATION_IDXES = list(range(36, 44)) + list(range(43, 34, -1))
 ZOMBIE_DIE_ANIMATION_IDXES = list(range(44, 84))
+
+# Sounds
+# Base directory for sound files (assuming they are in a 'sounds' folder next to constants.py)
+BASE_SOUND_DIR = os.path.join(ASSETS_DIR, "sounds")
+
+# Define paths for each sound file
+HIT_SOUND_PATH = os.path.join(BASE_SOUND_DIR, "hit.wav")
+MISS_SOUND_PATH = os.path.join(BASE_SOUND_DIR, "miss.wav")
+ZOMBIE_SPAWN_SOUND_PATH = os.path.join(BASE_SOUND_DIR, "zombie_spawn.wav")
+ZOMBIE_DISAPPEAR_SOUND_PATH = os.path.join(BASE_SOUND_DIR, "zombie_disapear.wav")
+BACKGROUND_SOUND_PATH = os.path.join(BASE_SOUND_DIR, "background.wav")
+VICTORY_BACKGROUND_SOUND_PATH = os.path.join(BASE_SOUND_DIR, "victory_theme.wav")
+LOSE_BACKGROUND_SOUND_PATH = os.path.join(BASE_SOUND_DIR, "lose_theme.wav")

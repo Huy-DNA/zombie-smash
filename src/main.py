@@ -9,7 +9,7 @@ from objects.Level.Level import LevelHandle, WIN, LOSE, TIME_UP, EASY_SCENE, MED
 from objects.Point.Point import Point
 from objects.Time.Time import Time
 from constants import GRASS_IDX, ICON_PATH, SCREEN_SIZE, SPRITE_MAP, SCREEN_WIDTH, SCREEN_HEIGHT
-
+from constants import *
 import os
 
 pygame.init()
@@ -34,6 +34,7 @@ spawning_spots = [
 try:
     background_image = pygame.image.load(f"{os.getcwd()}/assets/background/smashing-zombie-game.webp")
     background_image = pygame.transform.scale(background_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
+
 except pygame.error as e:
     print('Cannot load the image', e)
     pygame.quit()

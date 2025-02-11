@@ -2,6 +2,8 @@ import pygame
 
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT
 from objects.Button.Button import draw_button
+from objects.SoundHandler import play_background_music
+from constants import BACKGROUND_SOUND_PATH, LOSE_BACKGROUND_SOUND_PATH, VICTORY_BACKGROUND_SOUND_PATH
 
 # Colors and font
 white = (255, 255, 255)
@@ -35,11 +37,17 @@ class LevelHandle:
         self.current_level = EASY
         self.current_scene = MENU_SCENE
         self.game_state = CONTINUE
+        self.background_music_path = BACKGROUND_SOUND_PATH
+        self.reload_background_music()
+
+    def reload_background_music(self):
+        play_background_music(self.background_music_path)
 
     def go_to_menu(self):
         """Switch back to the menu"""        
         self.set_current_scene(MENU_SCENE)
         self.set_game_state(CONTINUE)
+        play_background_music(self.background_music_path)
         
     def go_to_next_level(self):
         if self.get_current_scene() == EASY_SCENE:
@@ -122,6 +130,13 @@ class LevelHandle:
         
     def set_game_state(self, state):
         self.game_state = state
+        if self.game_state == TIME_UP or self.game_state == LOSE:
+            self.background_music_path = LOSE_BACKGROUND_SOUND_PATH
+        elif self.game_state == WIN:
+            self.background_music_path = VICTORY_BACKGROUND_SOUND_PATH
+        else:
+            self.background_music_path = BACKGROUND_SOUND_PATH
+        self.reload_background_music()
 
     def get_game_state(self):
         return self.game_state
