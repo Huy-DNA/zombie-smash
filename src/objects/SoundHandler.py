@@ -50,9 +50,7 @@ def play_sound_with_lowered_bg(sound_path, bg_volume=0.2):
     # Play the sound effect.
     channel = sound.play()
     
-    # Wait until the sound effect is finished playing.
-    while channel.get_busy():
-        pygame.time.delay(50)
+
     
     # Restore the original background music volume.
     pygame.mixer.music.set_volume(current_volume)
