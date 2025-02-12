@@ -4,7 +4,11 @@ from sprites.Animatable import Animatable
 from sprites.Animation import Animation, Direction
 from sprites.AnimationSet import AnimationSet
 from objects.SoundHandler import play_sound_with_lowered_bg
-from constants import ZOMBIE_SPAWN_SOUND_PATH, HIT_SOUND_PATH, ZOMBIE_DISAPPEAR_SOUND_PATH
+from constants import (
+    ZOMBIE_SPAWN_SOUND_PATH,
+    HIT_SOUND_PATH,
+    ZOMBIE_DISAPPEAR_SOUND_PATH,
+)
 
 SPAWN_ANIMATION = Animation(
     sprite_idxes=ZOMBIE_SPAWN_ANIMATION_IDXES,
@@ -41,10 +45,17 @@ class NormalZombie(Animatable):
         play_sound_with_lowered_bg(ZOMBIE_SPAWN_SOUND_PATH)
 
     def despawn(self, *, start_ms: float = 0):
-        self.set_animation_set(NormalZombie.DESPAWN_ANIMATION_SET, start_ms=start_ms or pygame.time.get_ticks())
+        self.set_animation_set(
+            NormalZombie.DESPAWN_ANIMATION_SET,
+            start_ms=start_ms or pygame.time.get_ticks(),
+        )
         play_sound_with_lowered_bg(ZOMBIE_DISAPPEAR_SOUND_PATH)
 
     def kill(self, *, start_ms: float = 0):
         play_sound_with_lowered_bg(HIT_SOUND_PATH)
-        self.set_animation_set(NormalZombie.KILL_ANIMATION_SET, start_ms=start_ms or pygame.time.get_ticks())
+        self.set_animation_set(
+            NormalZombie.KILL_ANIMATION_SET,
+            start_ms=start_ms or pygame.time.get_ticks(),
+        )
         play_sound_with_lowered_bg(ZOMBIE_DISAPPEAR_SOUND_PATH)
+
