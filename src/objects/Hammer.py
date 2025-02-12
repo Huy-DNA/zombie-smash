@@ -12,7 +12,6 @@ SMASH_ANIMATION = Animation(
     direction=Direction.CENTER_CENTER,
 )
 
-
 class Hammer(Animatable):
     BASE_ANIMATION_SET = AnimationSet(queue=[BASE_ANIMATION], fps=60)
     SMASH_ANIMATION_SET = AnimationSet(queue=[SMASH_ANIMATION], fps=60)
