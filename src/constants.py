@@ -1,5 +1,7 @@
 import os
 
+import pygame
+
 from sprites.SpriteMap import loadSpriteMap
 
 SCREEN_WIDTH = 1280
@@ -29,6 +31,19 @@ HAMMER_IDX = 35
 HAMMER_SMASH_ANIMATION_IDXES = list(range(36, 44)) + list(range(43, 34, -1))
 ZOMBIE_DIE_ANIMATION_IDXES = list(range(44, 84))
 
+BACKGROUND_MAIN_IMAGE = pygame.transform.scale(
+    pygame.image.load(f"{ASSETS_DIR}/background/smashing-zombie-game.webp"),
+    (SCREEN_WIDTH, SCREEN_HEIGHT),
+)
+BACKGROUND_WIN_IMAGE = pygame.transform.scale(
+    pygame.image.load(f"{ASSETS_DIR}/background/victory-scene.webp"),
+    (SCREEN_WIDTH, SCREEN_HEIGHT),
+)
+BACKGROUND_LOSE_IMAGE = pygame.transform.scale(
+    pygame.image.load(f"{ASSETS_DIR}/background/loss.webp"),
+    (SCREEN_WIDTH, SCREEN_HEIGHT),
+)
+
 # Sounds
 # Base directory for sound files (assuming they are in a 'sounds' folder next to constants.py)
 BASE_SOUND_DIR = os.path.join(ASSETS_DIR, "sounds")
@@ -41,3 +56,4 @@ ZOMBIE_DISAPPEAR_SOUND_PATH = os.path.join(BASE_SOUND_DIR, "zombie_disappear.fla
 BACKGROUND_SOUND_PATH = os.path.join(BASE_SOUND_DIR, "background.wav")
 VICTORY_BACKGROUND_SOUND_PATH = os.path.join(BASE_SOUND_DIR, "victory_theme.wav")
 LOSE_BACKGROUND_SOUND_PATH = os.path.join(BASE_SOUND_DIR, "lose_theme.wav")
+

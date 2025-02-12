@@ -94,11 +94,6 @@ class LevelHandle:
 
     def draw_menu(self):
         """Draws the main menu with buttons."""
-        # Title
-        # title_surface = font.render("Select Difficulty Level", True, black)
-        # title_rect = title_surface.get_rect(center=(SCREEN_WIDTH // 2, 50))
-        # screen.blit(title_surface, title_rect)
-
         # Draw gameplay buttons
         draw_button(
             "Easy",
@@ -143,8 +138,6 @@ class LevelHandle:
         font = pygame.font.SysFont(None, 50)
 
         text_surface = font.render(f"{self.current_scene} Level", True, black)
-        # text_rect = text_surface.get_rect()
-        # screen.blit(text_surface, ((SCREEN_WIDTH - text_surface.get_width()) // 2, 50))
         screen.blit(text_surface, (10, 10))
 
         # Back button to return the menu
