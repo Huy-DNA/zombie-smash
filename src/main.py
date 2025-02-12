@@ -196,11 +196,9 @@ while running:
                     SPRITE_MAP
                 ).collidepoint(mouse_pos_x, mouse_pos_y):
                     spot.kill_zombie()
-                    # hits += 1
                     point_object.set_hits(point_object.get_hits() + 1)
                     break
             else:
-                # misses += 1
                 point_object.set_misses(point_object.get_misses() + 1)
         else:
             time_object.set_time(90)
