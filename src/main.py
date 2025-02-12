@@ -21,12 +21,12 @@ from constants import (
     BACKGROUND_MAIN_IMAGE,
     GRASS_IDX,
     ICON_PATH,
+    LOGOUT_ICON,
     SCREEN_SIZE,
     SPRITE_MAP,
     SCREEN_WIDTH,
     SCREEN_HEIGHT,
 )
-import os
 
 pygame.init()
 random.seed(datetime.datetime.now().ctime())
@@ -71,8 +71,7 @@ def check_game_condition():
 def quit_button(button_pos_dim, optional_text=None, action=None):
     mouse = pygame.mouse.get_pos()  # get mouse position
     click = pygame.mouse.get_pressed()  # handle mouse clicked event
-    logout_icon = pygame.image.load(f"{os.getcwd()}/assets/turn-off.png")
-    logout_icon = pygame.transform.scale(logout_icon, (30, 30))
+
     # button_pos_dim: x, y, width, height
     x, y, width, height = button_pos_dim
 
@@ -86,9 +85,9 @@ def quit_button(button_pos_dim, optional_text=None, action=None):
 
     if optional_text is None:
         # icon x, y position
-        icon_x = x + (width - logout_icon.get_width()) // 2
-        icon_y = y + (height - logout_icon.get_height()) // 2
-        screen.blit(logout_icon, (icon_x, icon_y))
+        icon_x = x + (width - LOGOUT_ICON.get_width()) // 2
+        icon_y = y + (height - LOGOUT_ICON.get_height()) // 2
+        screen.blit(LOGOUT_ICON, (icon_x, icon_y))
     else:
         font = pygame.font.Font(None, 30)
         text_surface = font.render(optional_text, True, (0, 0, 0))
@@ -100,7 +99,7 @@ def quit_button(button_pos_dim, optional_text=None, action=None):
 def display_quit_screen():
     font = pygame.font.Font(None, 50)  # create font size
     # color
-    TRANSPARENT_BLACK = (0, 0, 0, 128)  # Semi-transparent overlay
+    TRANSPARENT_BLACK = (0, 0, 0, 128)  # semi-transparent overlay
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
     # create dark transparent overlay

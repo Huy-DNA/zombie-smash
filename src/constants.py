@@ -43,6 +43,9 @@ BACKGROUND_LOSE_IMAGE = pygame.transform.scale(
     pygame.image.load(f"{ASSETS_DIR}/background/loss.webp"),
     (SCREEN_WIDTH, SCREEN_HEIGHT),
 )
+LOGOUT_ICON = pygame.transform.scale(
+    pygame.image.load(f"{ASSETS_DIR}/turn-off.png"), (30, 30)
+)
 
 # Sounds
 # Base directory for sound files (assuming they are in a 'sounds' folder next to constants.py)
@@ -56,4 +59,3 @@ ZOMBIE_DISAPPEAR_SOUND_PATH = os.path.join(BASE_SOUND_DIR, "zombie_disappear.fla
 BACKGROUND_SOUND_PATH = os.path.join(BASE_SOUND_DIR, "background.wav")
 VICTORY_BACKGROUND_SOUND_PATH = os.path.join(BASE_SOUND_DIR, "victory_theme.wav")
 LOSE_BACKGROUND_SOUND_PATH = os.path.join(BASE_SOUND_DIR, "lose_theme.wav")
-
