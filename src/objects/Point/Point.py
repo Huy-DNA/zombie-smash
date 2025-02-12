@@ -2,10 +2,7 @@ from constants import SCREEN_WIDTH, SCREEN_HEIGHT
 from objects.Level.Level import LevelHandle, LOSE, TIME_UP
 from objects.Time.Time import Time
 from objects.Button.Button import draw_button
-import os
-from objects.SoundHandler import play_background_music
 import pygame
-from constants import LOSE_BACKGROUND_SOUND_PATH, VICTORY_BACKGROUND_SOUND_PATH
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
